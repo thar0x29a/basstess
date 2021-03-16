@@ -1,0 +1,23 @@
+cld            ;$fc
+cli            ;$fa
+
+inc ax         ;$40
+inc bx         ;$43
+inc cx         ;$41
+inc dx         ;$42
+inc sp         ;$44
+inc bp         ;$45
+inc si         ;$46
+inc di         ;$47
+
+jmp *08        ;$eb \a2
+jmp *16        ;$e9 \a3
+
+loop *08       ;$e2 \a2
+
+mov al, *08    ;$b0 =a
+mov ah, *08    ;$b4 =a
+mov ax, *16    ;$b8 ~a
+
+out *08, al    ;$e6 =a
+out *08, ax    ;$e7 =a

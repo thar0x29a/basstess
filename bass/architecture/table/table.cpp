@@ -60,6 +60,21 @@ auto Table::assemble(const string& statement) -> bool {
           break;
         }
 
+	case Format::Type::RelativeTo: {
+          signed data = evaluate(args[format.argument]);
+          
+          if(data < pc) {
+            data = std::numeric_limits<uint64_t>::max();
+            data -= pc-data;
+          } else {
+            data = data-pc - format.displacement;
+          }
+
+          //TODO: endian?
+          writeBits(data, opcode.number[format.argument].bits);
+          break;  
+        }
+
         case Format::Type::Repeat: {
           uint data = evaluate(args[format.argument]);
           for(uint n : range(data)) {
@@ -221,6 +236,15 @@ auto Table::assembleTableRHS(Opcode& opcode, const string& text) -> void {
       Format format = {Format::Type::Relative};
       format.argument = item[2] - 'a';
       format.displacement = +(item[1] - '0');
+      opcode.format.append(format);
+    }
+
+    // \<param><sizeOfFullOptcode>
+    if(item[0] == '\\') {
+      Format format = {Format::Type::RelativeTo, Format::Match::Strong};
+
+      format.argument = item[1] - 'a';
+      format.displacement = +(item[2] - '0');;
       opcode.format.append(format);
     }
 
