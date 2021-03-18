@@ -1,6 +1,9 @@
 cld            ;$fc
 cli            ;$fa
 
+in al, *08     ;$e4 =a
+in ax, *08     ;$e5 =a
+
 inc ax         ;$40
 inc bx         ;$43
 inc cx         ;$41
@@ -15,9 +18,81 @@ jmp *16        ;$e9 \a3
 
 loop *08       ;$e2 \a2
 
-mov al, *08    ;$b0 =a
-mov ah, *08    ;$b4 =a
-mov ax, *16    ;$b8 ~a
+mov al, *8     ;$b0 ~a
+mov ah, *8     ;$b4 =a
+mov ax, *16	   ;$b8 ~a
+mov cl, *8     ;$b1 ~a
+mov ch, *8     ;$b5 =a
+mov cx, *16	   ;$b9 ~a
+mov dl, *8     ;$b2 ~a
+mov dh, *8     ;$b6 =a
+mov dx, *16	   ;$ba ~a
+mov bl, *8     ;$b3 ~a
+mov bh, *8     ;$b7 =a
+mov bx, *16	   ;$bb ~a
+
+mov AX, CX     ;$89 $C8
+mov AX, DX     ;$89 $D0
+mov AX, BX     ;$89 $D8
+mov AX, SP     ;$89 $E0
+mov AX, BP     ;$89 $E8
+mov AX, SI     ;$89 $F0
+mov AX, DI     ;$89 $F8
+mov CX, AX     ;$89 $C1
+mov CX, DX     ;$89 $D1
+mov CX, BX     ;$89 $D9
+mov CX, SP     ;$89 $E1
+mov CX, BP     ;$89 $E9
+mov CX, SI     ;$89 $F1
+mov CX, DI     ;$89 $F9
+mov DX, AX     ;$89 $C2
+mov DX, CX     ;$89 $CA
+mov DX, BX     ;$89 $DA
+mov DX, SP     ;$89 $E2
+mov DX, BP     ;$89 $EA
+mov DX, SI     ;$89 $F2
+mov DX, DI     ;$89 $FA
+mov BX, AX     ;$89 $C3
+mov BX, CX     ;$89 $CB
+mov BX, DX     ;$89 $D3
+mov BX, SP     ;$89 $E3
+mov BX, BP     ;$89 $EB
+mov BX, SI     ;$89 $F3
+mov BX, DI     ;$89 $FB
+mov SP, AX     ;$89 $C4
+mov SP, CX     ;$89 $CC
+mov SP, DX     ;$89 $D4
+mov SP, BX     ;$89 $DC
+mov SP, BP     ;$89 $EC
+mov SP, SI     ;$89 $F4
+mov SP, DI     ;$89 $FC
+mov BP, AX     ;$89 $C5
+mov BP, CX     ;$89 $CD
+mov BP, DX     ;$89 $D5
+mov BP, BX     ;$89 $DD
+mov BP, SP     ;$89 $E5
+mov BP, SI     ;$89 $F5
+mov BP, DI     ;$89 $FD
+mov SI, AX     ;$89 $C6
+mov SI, CX     ;$89 $CE
+mov SI, DX     ;$89 $D6
+mov SI, BX     ;$89 $DE
+mov SI, SP     ;$89 $E6
+mov SI, BP     ;$89 $EE
+mov SI, DI     ;$89 $FE
+mov DI, AX     ;$89 $C7
+mov DI, CX     ;$89 $CF
+mov DI, DX     ;$89 $D7
+mov DI, BX     ;$89 $DF
+mov DI, SP     ;$89 $E7
+mov DI, BP     ;$89 $EF
+mov DI, SI     ;$89 $F7
+
 
 out *08, al    ;$e6 =a
 out *08, ax    ;$e7 =a
+
+xor ax, ax     ;$31 $c0
+xor bx, bx     ;$31 $db
+xor cx, cx     ;$31 $c9
+xor dx, dx     ;$31 $d2
