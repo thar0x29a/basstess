@@ -88,6 +88,14 @@ struct Bass {
     string type;
   };
 
+  struct BassException {	
+	Instruction* where;
+	string what;
+  };
+
+  auto silentExceptions(bool yesno) -> void;
+  auto releaseExceptions() -> void;
+
 protected:
   auto analyzePhase() const -> bool { return phase == Phase::Analyze; }
   auto queryPhase() const -> bool { return phase == Phase::Query; }
@@ -168,6 +176,8 @@ protected:
   uint lastLabelCounter = 1;      //- instance counter
   uint nextLabelCounter = 1;      //+ instance counter
   bool strict = false;            //upgrade warnings to errors when true
+  bool holdExceptions = false;
+  vector<BassException> exceptions;
 
   file targetFile;
   string_vector sourceFilenames;

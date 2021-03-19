@@ -123,6 +123,20 @@ auto Bass::printInstruction() -> void {
   }
 }
 
+auto Bass::silentExceptions(bool yesno) -> void {
+	exceptions.reset();
+	holdExceptions = yesno;
+}
+
+auto Bass::releaseExceptions() -> void {
+	for(int i=0; i<exceptions.size(); i++) {
+		print(stderr, "error: ", exceptions[i].what, "\n");
+	}
+	
+	exceptions.reset();
+	holdExceptions = false;
+}
+
 template<typename... P> auto Bass::notice(P&&... p) -> void {
   string s{forward<P>(p)...};
   print(stderr, "notice: ", s, "\n");
@@ -131,19 +145,28 @@ template<typename... P> auto Bass::notice(P&&... p) -> void {
 
 template<typename... P> auto Bass::warning(P&&... p) -> void {
   string s{forward<P>(p)...};
-  print(stderr, "warning: ", s, "\n");
-  printInstruction();
-
-  if(!strict) return;
-  struct BassWarning {};
-  throw BassWarning();
+  BassException e = {activeInstruction, s};
+  
+  if(holdExceptions==false) {
+    print(stderr, "warning: ", s, "\n");
+    printInstruction();
+  } else {
+	exceptions.append(e);
+  }
+  
+  if(strict) throw e;
 }
 
 template<typename... P> auto Bass::error(P&&... p) -> void {
   string s{forward<P>(p)...};
-  print(stderr, "error: ", s, "\n");
-  printInstruction();
-
-  struct BassError {};
-  throw BassError();
+  BassException e = {activeInstruction, s};
+  
+  if(holdExceptions==false) {
+    print(stderr, "error: ", s, "\n");
+    printInstruction();
+  } else {
+	exceptions.append(e);
+  }
+  
+  throw e;
 }

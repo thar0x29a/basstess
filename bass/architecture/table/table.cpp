@@ -15,6 +15,7 @@ auto Table::assemble(const string& statement) -> bool {
 
   uint pc = Architecture::pc();
 
+  self.silentExceptions(true);
   for(auto& opcode : table) {
     if(!tokenize(s, opcode.pattern)) continue;
 
@@ -38,6 +39,7 @@ auto Table::assemble(const string& statement) -> bool {
     }
     if(mismatch) continue;
 
+	try {
     for(auto& format : opcode.format) {
       switch(format.type) {
         case Format::Type::Static: {
@@ -60,7 +62,7 @@ auto Table::assemble(const string& statement) -> bool {
           break;
         }
 
-	case Format::Type::RelativeTo: {
+		case Format::Type::RelativeTo: {
           signed data = evaluate(args[format.argument]);
           
           if(data < pc) {
@@ -70,7 +72,6 @@ auto Table::assemble(const string& statement) -> bool {
             data = data-pc - format.displacement;
           }
 
-          //TODO: endian?
           writeBits(data, opcode.number[format.argument].bits);
           break;  
         }
@@ -90,10 +91,14 @@ auto Table::assemble(const string& statement) -> bool {
         }
       }
     }
-
+	} catch (...) {
+		continue;
+	}
+	
     return true;
   }
 
+  self.releaseExceptions();
   return false;
 }
 
