@@ -64,7 +64,7 @@ auto Table::assemble(const string& statement) -> bool {
           signed data = evaluate(args[format.argument]);
           
           if(data < pc) {
-            data = std::numeric_limits<uint64_t>::max();
+            data = std::numeric_limits<signed>::max();
             data -= pc-data;
           } else {
             data = data-pc - format.displacement;

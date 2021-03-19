@@ -6,6 +6,7 @@
 #include "bass.hpp"
 #include "core/core.cpp"
 #include "architecture/table/table.cpp"
+#include "architecture/nec30/nec30.cpp"
 
 #include <nall/main.hpp>
 auto nall::main(string_vector args) -> void {

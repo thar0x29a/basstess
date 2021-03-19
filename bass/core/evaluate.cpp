@@ -54,6 +54,7 @@ auto Bass::evaluate(Eval::Node* node, Evaluation mode) -> int64_t {
 
   #undef p
   error("unsupported operator");
+  return 0;
 }
 
 auto Bass::evaluateParameters(Eval::Node* node, Evaluation mode) -> vector<int64_t> {
@@ -84,6 +85,7 @@ auto Bass::evaluateExpression(Eval::Node* node, Evaluation mode) -> int64_t {
   }
 
   error("unrecognized expression: ", name);
+  return 0;
 }
 
 auto Bass::evaluateLiteral(Eval::Node* node, Evaluation mode) -> int64_t {
@@ -102,6 +104,7 @@ auto Bass::evaluateLiteral(Eval::Node* node, Evaluation mode) -> int64_t {
   if(mode != Evaluation::Strict && queryPhase()) return pc();
 
   error("unrecognized variable: ", s);
+  return 0;
 }
 
 auto Bass::evaluateAssign(Eval::Node* node, Evaluation mode) -> int64_t {
@@ -113,4 +116,5 @@ auto Bass::evaluateAssign(Eval::Node* node, Evaluation mode) -> int64_t {
   }
 
   error("unrecognized variable assignment: ", s);
+  return 0;
 }

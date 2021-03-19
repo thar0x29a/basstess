@@ -88,6 +88,7 @@ auto Bass::assemble(const string& statement) -> bool {
   if(s.match("architecture ?*")) {
     s.trimLeft("architecture ", 1L);
     if(s == "none") architecture = new Architecture{*this};
+	else if(s == "nec30") architecture = new Nec30{*this};
     else {
       string location{Path::local(), "bass/architectures/", s, ".arch"};
       if(!file::exists(location)) location = {Path::program(), "architectures/", s, ".arch"};
