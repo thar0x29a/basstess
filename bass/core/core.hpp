@@ -88,9 +88,10 @@ struct Bass {
     string type;
   };
 
-  struct BassException {	
+  struct BassException {
 	Instruction* where;
 	string what;
+	bool error; // false = warning
   };
 
   auto silentExceptions(bool yesno) -> void;

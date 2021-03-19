@@ -130,7 +130,7 @@ auto Bass::silentExceptions(bool yesno) -> void {
 
 auto Bass::releaseExceptions() -> void {
 	for(int i=0; i<exceptions.size(); i++) {
-		print(stderr, "error: ", exceptions[i].what, "\n");
+		print(stderr, (exceptions[i].error==true) ? "error: " : "warning: ", exceptions[i].what, "\n");
 	}
 	
 	exceptions.reset();
@@ -145,7 +145,7 @@ template<typename... P> auto Bass::notice(P&&... p) -> void {
 
 template<typename... P> auto Bass::warning(P&&... p) -> void {
   string s{forward<P>(p)...};
-  BassException e = {activeInstruction, s};
+  BassException e = {activeInstruction, s, false};
   
   if(holdExceptions==false) {
     print(stderr, "warning: ", s, "\n");
@@ -159,7 +159,7 @@ template<typename... P> auto Bass::warning(P&&... p) -> void {
 
 template<typename... P> auto Bass::error(P&&... p) -> void {
   string s{forward<P>(p)...};
-  BassException e = {activeInstruction, s};
+  BassException e = {activeInstruction, s, true};
   
   if(holdExceptions==false) {
     print(stderr, "error: ", s, "\n");
