@@ -5,7 +5,7 @@ include ../nall/GNUmakefile
 
 flags += -I..
 
-name := bass
+name := basstess
 objects := obj/bass.o
 
 all: $(objects)
