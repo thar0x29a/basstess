@@ -1,3 +1,6 @@
+and al, *8     ;$24 =a
+and ax, *16    ;$25 ~a
+
 cld            ;$fc
 cli            ;$fa
 
@@ -15,6 +18,10 @@ inc di         ;$47
 
 jmp *08        ;$eb \a2
 jmp *16        ;$e9 \a3
+jno *08        ;$71 \a2
+jne *08        ;$75 \a2
+jnz *08        ;$75 \a2
+jo  *08        ;$70 \a2
 
 loop *08       ;$e2 \a2
 
@@ -30,6 +37,10 @@ mov dx, *16	   ;$ba ~a
 mov bl, *8     ;$b3 ~a
 mov bh, *8     ;$b7 =a
 mov bx, *16	   ;$bb ~a
+mov SP, *16    ;$bc ~a
+mov BP, *16    ;$bd ~a
+mov SI, *16    ;$be ~a
+mov DI, *16    ;$bf ~a
 
 mov AX, CX     ;$89 $C8
 mov AX, DX     ;$89 $D0
@@ -88,9 +99,61 @@ mov DI, SP     ;$89 $E7
 mov DI, BP     ;$89 $EF
 mov DI, SI     ;$89 $F7
 
+mov ES, AX     ;$89 $C0
+mov ES, CX     ;$89 $C1
+mov ES, DX     ;$89 $C2
+mov ES, BX     ;$89 $C3
+mov ES, SP     ;$89 $C4
+mov ES, BP     ;$89 $C5
+mov ES, SI     ;$89 $C6
+mov ES, DI     ;$89 $C7
+mov CS, AX     ;$89 $C8
+mov CS, CX     ;$89 $C9
+mov CS, DX     ;$89 $CA
+mov CS, BX     ;$89 $CB
+mov CS, SP     ;$89 $CC
+mov CS, BP     ;$89 $CD
+mov CS, SI     ;$89 $CE
+mov CS, DI     ;$89 $CF
+mov SS, AX     ;$89 $D0
+mov SS, CX     ;$89 $D1
+mov SS, DX     ;$89 $D2
+mov SS, BX     ;$89 $D3
+mov SS, SP     ;$89 $D4
+mov SS, BP     ;$89 $D5
+mov SS, SI     ;$89 $D6
+mov SS, DI     ;$89 $D7
+mov DS, AX     ;$89 $D8
+mov DS, CX     ;$89 $D9
+mov DS, DX     ;$89 $DA
+mov DS, BX     ;$89 $DB
+mov DS, SP     ;$89 $DC
+mov DS, BP     ;$89 $DD
+mov DS, SI     ;$89 $DE
+mov DS, DI     ;$89 $DF
+mov FS, AX     ;$89 $E0
+mov FS, CX     ;$89 $E1
+mov FS, DX     ;$89 $E2
+mov FS, BX     ;$89 $E3
+mov FS, SP     ;$89 $E4
+mov FS, BP     ;$89 $E5
+mov FS, SI     ;$89 $E6
+mov FS, DI     ;$89 $E7
+mov GS, AX     ;$89 $E8
+mov GS, CX     ;$89 $E9
+mov GS, DX     ;$89 $EA
+mov GS, BX     ;$89 $EB
+mov GS, SP     ;$89 $EC
+mov GS, BP     ;$89 $ED
+mov GS, SI     ;$89 $EE
+mov GS, DI     ;$89 $EF
 
 out *08, al    ;$e6 =a
 out *08, ax    ;$e7 =a
+
+rep stosw      ;$f3 $ab
+repnz stosw    ;$f2 $ab
+repz stosw     ;$f3 $ab
 
 xor ax, ax     ;$31 $c0
 xor bx, bx     ;$31 $db
