@@ -156,7 +156,9 @@ auto Bass::executeInstruction(Instruction& i) -> bool {
         if(0);
         else if(p[0] == "define") setDefine(p[1], {}, parameters(n), Frame::Level::Inline);
         else if(p[0] == "string") setDefine(p[1], {}, text(parameters(n)), Frame::Level::Inline);
-        else if(p[0] == "evaluate") setDefine(p[1], {}, evaluate(parameters(n)), Frame::Level::Inline);
+        else if(p[0] == "evaluate")
+			if(!evaluateFunction(parameters(n)))
+				setDefine(p[1], {}, evaluate(parameters(n)), Frame::Level::Inline);
         else if(p[0] == "variable") setVariable(p[1], evaluate(parameters(n)), Frame::Level::Inline);
         else error("unsupported parameter type: ", p[0]);
       }

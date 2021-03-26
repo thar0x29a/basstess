@@ -1,4 +1,4 @@
-and al, *8     ;$24 =a
+and al, *08    ;$24 =a
 and ax, *16    ;$25 ~a
 
 cld            ;$fc
@@ -25,17 +25,17 @@ jo  *08        ;$70 \a2
 
 loop *08       ;$e2 \a2
 
-mov al, *8     ;$b0 ~a
-mov ah, *8     ;$b4 =a
+mov al, *08    ;$b0 ~a
+mov ah, *08    ;$b4 =a
 mov ax, *16	   ;$b8 ~a
-mov cl, *8     ;$b1 ~a
-mov ch, *8     ;$b5 =a
+mov cl, *08    ;$b1 ~a
+mov ch, *08    ;$b5 =a
 mov cx, *16	   ;$b9 ~a
-mov dl, *8     ;$b2 ~a
-mov dh, *8     ;$b6 =a
+mov dl, *08    ;$b2 ~a
+mov dh, *08    ;$b6 =a
 mov dx, *16	   ;$ba ~a
-mov bl, *8     ;$b3 ~a
-mov bh, *8     ;$b7 =a
+mov bl, *08    ;$b3 ~a
+mov bh, *08    ;$b7 =a
 mov bx, *16	   ;$bb ~a
 mov sp, *16    ;$bc ~a
 mov bp, *16    ;$bd ~a
@@ -148,6 +148,8 @@ mov gs, bp     ;$89 $ed
 mov gs, si     ;$89 $ee
 mov gs, di     ;$89 $ef
 
+or al, *08     ;$0c =a
+or ax, *16     ;$0d ~a
 out *08, al    ;$e6 =a
 out *08, ax    ;$e7 =a
 
@@ -159,3 +161,6 @@ xor ax, ax     ;$31 $c0
 xor bx, bx     ;$31 $db
 xor cx, cx     ;$31 $c9
 xor dx, dx     ;$31 $d2
+
+xor al, *08    ;$34 =a
+xor ax, *16    ;$35 ~a

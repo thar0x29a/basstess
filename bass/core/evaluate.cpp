@@ -73,6 +73,10 @@ auto Bass::evaluateExpression(Eval::Node* node, Evaluation mode) -> int64_t {
   if(name == "origin") return origin;
   if(name == "base") return base;
   if(name == "pc") return pc();
+  if(name == "result#1") {
+	setVariable({scope.merge("."), "#result"}, evaluate(parameters[0]), Frame::Level::Inline);
+	return 0;
+  }
 
   if(auto expression = findExpression(name)) {
     if(parameters) frames.append({0, true});
@@ -117,4 +121,21 @@ auto Bass::evaluateAssign(Eval::Node* node, Evaluation mode) -> int64_t {
 
   error("unrecognized variable assignment: ", s);
   return 0;
+}
+
+auto Bass::evaluateFunction(const string& expression, Evaluation mode) -> bool {
+	print(expression, "\n");
+  Eval::Node* node = nullptr;
+  try {
+    node = Eval::parse(expression);
+	if(node->type != Eval::Node::Type::Function) return false;
+	
+	//1. use the instruction stack to call the subfunction
+	//2. placehold the expected result here
+	print("Work here\n");
+  } catch(...) {
+    error("malformed expression: ", expression);
+  }
+
+  return false;
 }

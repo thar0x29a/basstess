@@ -32,6 +32,7 @@ struct Bass {
     string name;
     string_vector parameters;
     uint ip;
+	
     bool inlined;
   };
 
@@ -149,6 +150,7 @@ protected:
   auto findConstant(const string& name) -> maybe<Constant&>;
 
   auto evaluateDefines(string& statement) -> void;
+  auto evaluateFunction(const string& expression, Evaluation mode = Evaluation::Default) -> bool;
 
   auto filepath() -> string;
   auto split(const string& s) -> string_vector;
@@ -172,6 +174,7 @@ protected:
   Endian endian = Endian::LSB;    //used for multi-byte writes (d[bwldq], etc)
   uint macroInvocationCounter;    //used for {#} support
   uint ip = 0;                    //instruction pointer into program
+  vector<uint> trace;             //trace on nested macro calls
   uint origin = 0;                //file offset
   int base = 0;                   //file offset to memory map displacement
   uint lastLabelCounter = 1;      //- instance counter

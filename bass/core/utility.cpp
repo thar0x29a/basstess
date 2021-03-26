@@ -9,7 +9,6 @@ auto Bass::setMacro(const string& name, const string_vector& parameters, uint ip
       if(level == Frame::Level::Global && n) { continue; }
       if(level == Frame::Level::Parent && n) { level = Frame::Level::Active; continue; }
     }
-
     auto& macros = frames[n].macros;
     if(auto macro = macros.find({scopedName})) {
       macro().parameters = parameters;
