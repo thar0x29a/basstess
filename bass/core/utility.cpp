@@ -26,7 +26,7 @@ auto Bass::setMacro(const string& name, const string_vector& parameters, uint ip
 auto Bass::findMacro(const string& name) -> maybe<Macro&> {
   for(int n : rrange(frames.size())) {
     auto& macros = frames[n].macros;
-    auto s = scope;
+    auto s = scope.merge(".").split(".");
     while(true) {
       string scopedName = {s.merge("."), s ? "." : "", name};
       if(auto macro = macros.find({scopedName})) {
@@ -67,7 +67,7 @@ auto Bass::setDefine(const string& name, const string_vector& parameters, const 
 auto Bass::findDefine(const string& name) -> maybe<Define&> {
   for(int n : rrange(frames.size())) {
     auto& defines = frames[n].defines;
-    auto s = scope;
+    auto s = scope.merge(".").split(".");
     while(true) {
       string scopedName = {s.merge("."), s ? "." : "", name};
       if(auto define = defines.find({scopedName})) {
@@ -108,7 +108,7 @@ auto Bass::setExpression(const string& name, const string_vector& parameters, co
 auto Bass::findExpression(const string& name) -> maybe<Expression&> {
   for(int n : rrange(frames.size())) {
     auto& expressions = frames[n].expressions;
-    auto s = scope;
+    auto s = scope.merge(".").split(".");
     while(true) {
       string scopedName = {s.merge("."), s ? "." : "", name};
       if(auto expression = expressions.find({scopedName})) {
@@ -147,7 +147,7 @@ auto Bass::setVariable(const string& name, int64_t value, Frame::Level level) ->
 auto Bass::findVariable(const string& name) -> maybe<Variable&> {
   for(int n : rrange(frames.size())) {
     auto& variables = frames[n].variables;
-    auto s = scope;
+    auto s = scope.merge(".").split(".");
     while(true) {
       string scopedName = {s.merge("."), s ? "." : "", name};
       if(auto variable = variables.find({scopedName})) {
@@ -174,7 +174,7 @@ auto Bass::setConstant(const string& name, int64_t value) -> void {
 }
 
 auto Bass::findConstant(const string& name) -> maybe<Constant&> {
-  auto s = scope;
+  auto s = scope.merge(".").split(".");
   while(true) {
     string scopedName = {s.merge("."), s ? "." : "", name};
     if(auto constant = constants.find({scopedName})) {
