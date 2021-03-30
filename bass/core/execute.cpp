@@ -6,20 +6,36 @@ auto Bass::execute() -> bool {
 
   initialize();
 
+  // init the global frame
   frames.append({0, false});
   for(auto& define : defines) {
     setDefine(define.name, {}, define.value, Frame::Level::Inline);
   }
 
-  while(ip < program.size()) {
-    Instruction& i = program(ip++);
-    if(!executeInstruction(i)) error("unrecognized directive: ", i.statement);
-  }
+  executeFrame();
 
+  // drop the (hopefully) global scrope
   frames.removeRight();
+  
+  if(frames.size()>0) {
+    error("Missing }");
+  }
+  
   return true;
 }
 
+/** executes all instructions from the frame on top and returns after that job is done */
+auto Bass::executeFrame() -> void {
+  auto depth = frames.size();
+  
+  while(ip < program.size()) {
+    Instruction& i = program(ip++);
+    if(!executeInstruction(i)) error("unrecognized directive: ", i.statement);
+    if(frames.size()<depth) break;
+  }
+}
+
+// lets do this again .. in recursive.
 auto Bass::executeInstruction(Instruction& i) -> bool {
   activeInstruction = &i;
   string s = i.statement;
@@ -33,6 +49,7 @@ auto Bass::executeInstruction(Instruction& i) -> bool {
   if(global) s.trimLeft("global ", 1L), level = Frame::Level::Global;
   if(parent) s.trimLeft("parent ", 1L), level = Frame::Level::Parent;
 
+  // declares
   if(s.match("macro ?*(*) {")) {
     bool inlined = false;
     s.trim("macro ", ") {", 1L);
@@ -140,32 +157,7 @@ auto Bass::executeInstruction(Instruction& i) -> bool {
   }
 
   if(s.match("?*(*)")) {
-    auto p = string{s}.trimRight(")", 1L).split("(", 1L).strip();
-    auto name = p(0);
-    auto parameters = split(p(1));
-    if(parameters) name.append("#", parameters.size());
-    if(auto macro = findMacro({name})) {
-      frames.append({ip, macro().inlined});
-      if(!frames.right().inlined) scope.append(p(0));
-
-      setDefine("#", {}, {"_", macroInvocationCounter++, "_"}, Frame::Level::Inline);
-      for(uint n : range(parameters)) {
-        auto p = macro().parameters(n).split(" ", 1L).strip();
-        if(p.size() == 1) p.prepend("define");
-
-        if(0);
-        else if(p[0] == "define") setDefine(p[1], {}, parameters(n), Frame::Level::Inline);
-        else if(p[0] == "string") setDefine(p[1], {}, text(parameters(n)), Frame::Level::Inline);
-        else if(p[0] == "evaluate")
-			if(!evaluateFunction(parameters(n)))
-				setDefine(p[1], {}, evaluate(parameters(n)), Frame::Level::Inline);
-        else if(p[0] == "variable") setVariable(p[1], evaluate(parameters(n)), Frame::Level::Inline);
-        else error("unsupported parameter type: ", p[0]);
-      }
-
-      ip = macro().ip;
-      return true;
-    }
+    if(executeMacro(s) == true) return true;
   }
 
   if(s.match("} endmacro") || s.match("} endinline")) {
@@ -181,4 +173,51 @@ auto Bass::executeInstruction(Instruction& i) -> bool {
 
   evaluate(s);
   return true;
+}
+
+auto Bass::executeMacro(string& s) -> bool {
+	auto p = string{s}.trimRight(")", 1L).split("(", 1L).strip();
+  auto name = p(0);
+  auto parameters = split(p(1));
+  if(parameters) name.append("#", parameters.size());
+	
+  if(auto macro = findMacro({name})) {
+	  // append macro location to frame stack
+      frames.append({ip, macro().inlined});
+      if(!frames.right().inlined) scope.append(p(0));
+
+      setDefine("#", {}, {"_", macroInvocationCounter++, "_"}, Frame::Level::Inline);
+      for(uint n : range(parameters)) {
+        auto p = macro().parameters(n).split(" ", 1L).strip();
+        if(p.size() == 1) p.prepend("define");
+
+        if(0);
+        else if(p[0] == "define") setDefine(p[1], {}, parameters(n), Frame::Level::Inline);
+        else if(p[0] == "string") setDefine(p[1], {}, text(parameters(n)), Frame::Level::Inline);
+        else if(p[0] == "variable") setVariable(p[1], evaluate(parameters(n)), Frame::Level::Inline);
+        else if(p[0] == "evaluate") {
+          if(parameters(n).match("?*(*)")) {
+            // subcall
+            executeMacro(parameters(n));
+            executeFrame();
+            
+            auto f = string{parameters(n)}.split("(")[0];
+            if(auto v = findVariable({f, ".result"})) {
+              setDefine(p[1], {}, evaluate(v().value), Frame::Level::Inline);
+            } else {
+              error("Expected result from ", parameters(n));
+            }
+          } else {
+            setDefine(p[1], {}, evaluate(parameters(n)), Frame::Level::Inline);
+          }
+        }
+        else error("unsupported parameter type: ", p[0]);
+      }
+
+      ip = macro().ip;
+      
+      return true;
+    }
+	
+	return false;
 }
