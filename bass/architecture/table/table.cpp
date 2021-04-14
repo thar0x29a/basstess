@@ -64,10 +64,11 @@ auto Table::assemble(const string& statement) -> bool {
 
 		case Format::Type::RelativeTo: {
           signed data = evaluate(args[format.argument]);
-          
+
           if(data < pc) {
+            int tmp = pc-data + 1; // +1 = displacement of current instruction
             data = std::numeric_limits<signed>::max();
-            data -= pc-data;
+            data -= tmp;
           } else {
             data = data-pc - format.displacement;
           }

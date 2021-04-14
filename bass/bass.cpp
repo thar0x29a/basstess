@@ -11,7 +11,7 @@
 #include <nall/main.hpp>
 auto nall::main(string_vector args) -> void {
   if(args.size() == 1) {
-    print(stderr, "basstess (bass v15)\n");
+    print(stderr, "basstess 0.2 (bass v15)\n");
     print(stderr, "usage: bass [options] source [source ...]\n");
     print(stderr, "\n");
     print(stderr, "options:\n");
