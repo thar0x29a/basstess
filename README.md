@@ -36,7 +36,7 @@ From now on its possible to overload terms. The feature works, but with limitati
 mov ax, cx     ;$89 $c8
 mov ax, *16	   ;$b8 ~a
 ```
-.. will work. Bass will notice that the first version does not match the battern and will jump forward to the next one. However. If you switch the order, it will not work, since cx could be the 'parameter'. Bass will not choose. It will just try and continue.
+.. will work. Bass will notice that the first version does not match the pattern and will jump forward to the next one. However. If you switch the order, it will not work, since cx could be the 'parameter'. Bass will not choose. It will just try and continue.
 
 ### Macro
 #### Full nested Namespaces
