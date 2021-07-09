@@ -11,8 +11,8 @@
 #include <nall/main.hpp>
 auto nall::main(string_vector args) -> void {
   if(args.size() == 1) {
-    print(stderr, "basstess 0.2 (bass v15)\n");
-    print(stderr, "usage: bass [options] source [source ...]\n");
+    print(stderr, "basstess v2 (bass v15)\n");
+    print(stderr, "usage: basstess [options] source [source ...]\n");
     print(stderr, "\n");
     print(stderr, "options:\n");
     print(stderr, "  -o target        specify default output filename [overwrite]\n");
